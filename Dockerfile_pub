@@ -1,0 +1,6 @@
+FROM openjdk:8-oraclelinux7
+
+COPY app/build/install/app /app
+COPY stress_pub.sh /
+
+CMD /stress_pub.sh
