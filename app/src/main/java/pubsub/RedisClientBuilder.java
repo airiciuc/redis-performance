@@ -1,7 +1,7 @@
 package pubsub;
 
-import io.lettuce.core.ClientOptions;
-import io.lettuce.core.RedisClient;
+import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.metrics.MicrometerCommandLatencyRecorder;
 import io.lettuce.core.metrics.MicrometerOptions;
 import io.lettuce.core.resource.ClientResources;
@@ -21,9 +21,9 @@ public class RedisClientBuilder {
     public static final String CONFIG_YML = "redis.yml";
     public static final String HOST_PROP = "host";
 
-    public static RedisClient build() {
-        RedisClient redisClient = RedisClient.create(getClientResources(), "redis://" + getHost() + "/0");
-        redisClient.setOptions(ClientOptions.builder()
+    public static RedisClusterClient build() {
+        RedisClusterClient redisClient = RedisClusterClient.create(getClientResources(), "redis://" + getHost() + "/0");
+        redisClient.setOptions(ClusterClientOptions.builder()
                 .suspendReconnectOnProtocolFailure(false)
                 .pingBeforeActivateConnection(false)
                 .build());

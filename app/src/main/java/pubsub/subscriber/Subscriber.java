@@ -1,6 +1,6 @@
 package pubsub.subscriber;
 
-import io.lettuce.core.RedisClient;
+import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class Subscriber {
 
     private final String pattern;
     private final int channels;
-    private final RedisClient client;
+    private final RedisClusterClient client;
 
     private final String id = UUID.randomUUID().toString();
 

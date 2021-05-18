@@ -2,9 +2,9 @@ package pubsub.publisher;
 
 import com.google.common.util.concurrent.RateLimiter;
 import io.lettuce.core.RedisChannelHandler;
-import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisConnectionStateListener;
 import io.lettuce.core.RedisException;
+import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class Publisher implements RedisConnectionStateListener {
     private final int initialRounds;
     private final double initialRateIncrement;
     private final double rateIncrement;
-    private final RedisClient client;
+    private final RedisClusterClient client;
 
     private final RateLimiter rateLimiter;
 
