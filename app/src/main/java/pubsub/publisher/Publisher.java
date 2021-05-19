@@ -19,7 +19,7 @@ public class Publisher {
     private static final String MSG_BODY = "CachePubSubEvent{nodeId='84af0b96-2eb6-4153-bc99-fc2733c56712', " +
             "cacheName='Query_f06ce81a-9b74-4c0a-9af8-ce08e7128453', cacheKey=null}";
 
-    private static final int RATE_INCREMENT_SECONDS = 5;
+    private static final int RATE_INCREMENT_SECONDS = 300;
 
     private final Random random = new Random();
     private final String channel;
@@ -44,8 +44,8 @@ public class Publisher {
 
     public void run() {
         subscribeToChannel();
+        new Thread(this::startIncreasingRate).start();
         startPublishing();
-        startIncreasingRate();
     }
 
     private void subscribeToChannel() {
@@ -78,6 +78,7 @@ public class Publisher {
                 Thread.sleep(TimeUnit.SECONDS.toMillis(RATE_INCREMENT_SECONDS));
                 double increment = rounds < initialRounds? initialRateIncrement : rateIncrement;
                 rateLimiter.setRate(rateLimiter.getRate() + increment);
+                ++rounds;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException(e);

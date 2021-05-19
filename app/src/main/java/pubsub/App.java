@@ -3,8 +3,6 @@ package pubsub;
 import pubsub.publisher.Publisher;
 import pubsub.subscriber.Subscriber;
 
-import java.io.IOException;
-
 public class App {
 
     public static final String PUBLISHER_APP = "pub";
