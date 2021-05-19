@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-/app/bin/app "sub" "ch" &
+echo "Channels: ${CHANNELS}"
+
+/app/bin/app "sub" "ch" "$CHANNELS" &
 
 tail -f /dev/null

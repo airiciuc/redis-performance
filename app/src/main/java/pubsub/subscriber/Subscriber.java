@@ -17,24 +17,26 @@ public class Subscriber {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Subscriber.class);
 
-    private static final int COUNTERS_PRINT_SEC = 5;
+    private static final int COUNTERS_PRINT_SEC = 300;
 
     private final String pattern;
+    private final int channels;
     private final RedisClient client;
 
     private final String id = UUID.randomUUID().toString();
 
     private final ConcurrentHashMap<String, Integer> messages = new ConcurrentHashMap<>();
 
-    public Subscriber(String pattern) {
+    public Subscriber(String pattern, int channels) {
         this.pattern = pattern;
+        this.channels = channels;
         this.client = RedisClientBuilder.build();
     }
 
     public void run() {
         ExecutorService executor = Executors.newFixedThreadPool(100);
 
-        for (int i = 0; i < 500; ++i) {
+        for (int i = 0; i < channels; ++i) {
             int channel = i;
             executor.execute(() -> createConnection(channel));
         }
