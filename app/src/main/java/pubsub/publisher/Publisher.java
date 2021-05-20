@@ -1,7 +1,9 @@
 package pubsub.publisher;
 
 import com.google.common.util.concurrent.RateLimiter;
+import io.lettuce.core.RedisChannelHandler;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisConnectionStateListener;
 import io.lettuce.core.RedisException;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
@@ -9,10 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pubsub.RedisClientBuilder;
 
+import java.net.SocketAddress;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-public class Publisher {
+public class Publisher implements RedisConnectionStateListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Publisher.class);
 
@@ -43,19 +46,14 @@ public class Publisher {
     }
 
     public void run() {
-        subscribeToChannel();
         new Thread(this::startIncreasingRate).start();
         startPublishing();
-    }
-
-    private void subscribeToChannel() {
-        StatefulRedisPubSubConnection<String, String> subscription = client.connectPubSub();
-        subscription.sync().subscribe(channel);
     }
 
     private void startPublishing() {
         StatefulRedisPubSubConnection<String, String> connection = client.connectPubSub();
         RedisPubSubAsyncCommands<String, String> async = connection.async();
+        client.addListener(this);
 
         while (true) {
             sendMessage(async);
@@ -84,5 +82,20 @@ public class Publisher {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void onRedisConnected(RedisChannelHandler<?, ?> connection, SocketAddress socketAddress) {
+        LOGGER.info("Connected to {}", socketAddress);
+    }
+
+    @Override
+    public void onRedisDisconnected(RedisChannelHandler<?, ?> connection){
+        LOGGER.info("Disconnected from redis");
+    }
+
+    @Override
+    public void onRedisExceptionCaught(RedisChannelHandler<?, ?> connection, Throwable cause){
+        LOGGER.error("Exception occurred", cause);
     }
 }
