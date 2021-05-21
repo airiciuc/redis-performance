@@ -2,6 +2,7 @@ package pubsub;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.TimeoutOptions;
 import io.lettuce.core.metrics.MicrometerCommandLatencyRecorder;
 import io.lettuce.core.metrics.MicrometerOptions;
 import io.lettuce.core.resource.ClientResources;
@@ -26,6 +27,7 @@ public class RedisClientBuilder {
         redisClient.setOptions(ClientOptions.builder()
                 .suspendReconnectOnProtocolFailure(false)
                 .pingBeforeActivateConnection(false)
+                .timeoutOptions(TimeoutOptions.enabled(Duration.ofMillis(500)))
                 .build());
         return redisClient;
     }

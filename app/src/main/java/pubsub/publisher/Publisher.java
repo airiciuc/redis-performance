@@ -63,7 +63,11 @@ public class Publisher implements RedisConnectionStateListener {
 
     private void sendMessage(RedisPubSubAsyncCommands<String, String> async) {
         try {
-            async.publish(channel + random.nextInt(channels), MSG_BODY);
+            async.publish(channel + random.nextInt(channels), MSG_BODY)
+                    .exceptionally(err -> {
+                        LOGGER.error("Failed to send message", err);
+                        return 1L;
+                    });
         } catch (RedisException ex) {
             LOGGER.error("failed to send message", ex);
         }
@@ -74,7 +78,7 @@ public class Publisher implements RedisConnectionStateListener {
         while (true) {
             try {
                 Thread.sleep(TimeUnit.SECONDS.toMillis(RATE_INCREMENT_SECONDS));
-                double increment = rounds < initialRounds? initialRateIncrement : rateIncrement;
+                double increment = rounds < initialRounds ? initialRateIncrement : rateIncrement;
                 rateLimiter.setRate(rateLimiter.getRate() + increment);
                 ++rounds;
             } catch (InterruptedException e) {
@@ -90,12 +94,12 @@ public class Publisher implements RedisConnectionStateListener {
     }
 
     @Override
-    public void onRedisDisconnected(RedisChannelHandler<?, ?> connection){
+    public void onRedisDisconnected(RedisChannelHandler<?, ?> connection) {
         LOGGER.info("Disconnected from redis");
     }
 
     @Override
-    public void onRedisExceptionCaught(RedisChannelHandler<?, ?> connection, Throwable cause){
+    public void onRedisExceptionCaught(RedisChannelHandler<?, ?> connection, Throwable cause) {
         LOGGER.error("Exception occurred", cause);
     }
 }
