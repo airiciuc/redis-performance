@@ -18,7 +18,7 @@ public class Publisher {
     private static final byte[] MSG_BODY = new byte[500];
 
     private static final int RATE_INCREMENT_SECONDS = 300;
-    private static final int CONNECTIONS = 50;
+    private static final int CONNECTIONS = 20;
 
     private final Random random = new Random();
     private final String channel;
@@ -51,7 +51,6 @@ public class Publisher {
         RedisPubSubAsyncCommands<String, byte[]>[] asyncs = new RedisPubSubAsyncCommands[CONNECTIONS];
         for (int i = 0; i < CONNECTIONS; ++i) {
             asyncs[i] = client.connectPubSub(new StringByteCodec()).async();
-            sleep(5000);
         }
 
         while (true) {

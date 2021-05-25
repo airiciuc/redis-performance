@@ -1,7 +1,6 @@
 package pubsub.subscriber;
 
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import pubsub.RedisClientBuilder;
@@ -38,10 +37,5 @@ public class Subscriber {
                 messages.compute(channel, (key, val) -> val == null ? 1 : val + 1);
             }
         });
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
