@@ -17,13 +17,15 @@ public class App {
         String type = args[0];
 
         if (PUBLISHER_APP.equalsIgnoreCase(type)) {
-            new Publisher(args[1],
-                    Integer.parseInt(args[2]),
+            new Publisher(
+                    args[1],
+                    args[2],
                     Integer.parseInt(args[3]),
-                    Double.parseDouble(args[4]),
-                    Double.parseDouble(args[5])).run();
+                    Integer.parseInt(args[4]),
+                    Double.parseDouble(args[5]),
+                    Double.parseDouble(args[6])).run();
         } else if (SUBSCRIBER_APP.equalsIgnoreCase(type)) {
-            new Subscriber(args[1], Integer.parseInt(args[2])).run();
+            new Subscriber(args[1], args[2], Integer.parseInt(args[3])).run();
         } else {
             throw new IllegalArgumentException("Unknown type '" + type + "'");
         }
@@ -36,21 +38,21 @@ public class App {
 
         String type = args[0];
 
-        return PUBLISHER_APP.equalsIgnoreCase(type) && args.length == 6 ||
-                SUBSCRIBER_APP.equalsIgnoreCase(type) && args.length == 3;
+        return PUBLISHER_APP.equalsIgnoreCase(type) && args.length == 7 ||
+                SUBSCRIBER_APP.equalsIgnoreCase(type) && args.length == 4;
     }
 
     private static void printHelp() {
         System.out.println("use with parameters:");
         System.out.println();
         System.out.println("***** Subscriber *******");
-        System.out.println("\t sub <pattern> <channels?");
-        System.out.println("\t example: sub ch 100");
+        System.out.println("\t sub <host> <pattern> <channels>");
+        System.out.println("\t example: sub host ch 100");
         System.out.println("************************");
         System.out.println();
         System.out.println("****** Publisher *******");
-        System.out.println("\t pub <channel> <channels> <initialRounds> <initialRateIncrement> <rateIncrement>");
-        System.out.println("\t example: pub ch 100 10 200 100");
+        System.out.println("\t pub <host> <channel> <channels> <initialRounds> <initialRateIncrement> <rateIncrement>");
+        System.out.println("\t example: pub host ch 100 10 200 100");
         System.out.println("************************");
     }
 }
