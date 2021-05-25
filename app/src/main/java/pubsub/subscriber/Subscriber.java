@@ -6,6 +6,7 @@ import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import pubsub.RedisClientBuilder;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 public class Subscriber {
 
@@ -23,9 +24,20 @@ public class Subscriber {
     }
 
     public void run() {
-        for (int i = 0; i < channels; ++i) {
-            createConnection(i);
-        }
+        createConnections(1, 100);
+        createConnections(2, 100);
+        IntStream.range(0, 20)
+                .forEach(channel -> createConnections(channel + 3, 40));
+        IntStream.range(0, 100)
+                .forEach(channel -> createConnections(channel + 23, 10));
+        IntStream.range(0, 200)
+                .forEach(channel -> createConnections(channel + 123, 5));
+
+    }
+
+    private void createConnections(int channel, int connections) {
+        IntStream.range(0, connections)
+                .forEach(idx -> createConnection(channel));
     }
 
     private void createConnection(int channel) {
