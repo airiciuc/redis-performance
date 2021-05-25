@@ -1,5 +1,6 @@
 package pubsub.subscriber;
 
+import io.lettuce.core.RedisClient;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
@@ -11,7 +12,7 @@ public class Subscriber {
 
     private final String pattern;
     private final int channels;
-    private final RedisClusterClient client;
+    private final RedisClient client;
 
 
     private final ConcurrentHashMap<String, Integer> messages = new ConcurrentHashMap<>();

@@ -1,8 +1,8 @@
 package pubsub.publisher;
 
 import com.google.common.util.concurrent.RateLimiter;
+import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisException;
-import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class Publisher {
     private final int initialRounds;
     private final double initialRateIncrement;
     private final double rateIncrement;
-    private final RedisClusterClient client;
+    private final RedisClient client;
 
     private final RateLimiter rateLimiter;
 
