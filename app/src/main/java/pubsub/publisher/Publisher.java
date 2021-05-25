@@ -10,6 +10,7 @@ import pubsub.RedisClientBuilder;
 import pubsub.StringByteCodec;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Publisher {
 
@@ -18,7 +19,7 @@ public class Publisher {
     private static final byte[] MSG_BODY = new byte[500];
 
     private static final int RATE_INCREMENT_SECONDS = 300;
-    private static final int CONNECTIONS = 50;
+    private static final int CONNECTIONS = 20;
 
     private final Random random = new Random();
     private final String channel;
@@ -78,14 +79,14 @@ public class Publisher {
     private void startIncreasingRate() {
         int rounds = 1;
         while (true) {
-            sleep(RATE_INCREMENT_SECONDS);
+            sleep(TimeUnit.SECONDS.toMillis(RATE_INCREMENT_SECONDS));
             double increment = rounds < initialRounds ? initialRateIncrement : rateIncrement;
             rateLimiter.setRate(rateLimiter.getRate() + increment);
             ++rounds;
         }
     }
 
-    private void sleep(int millis) {
+    private void sleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (Exception ex) {
