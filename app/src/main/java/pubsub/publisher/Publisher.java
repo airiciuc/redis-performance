@@ -10,6 +10,7 @@ import pubsub.RedisClientBuilder;
 import pubsub.StringByteCodec;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Publisher {
 
@@ -77,14 +78,14 @@ public class Publisher {
     private void startIncreasingRate() {
         int rounds = 1;
         while (true) {
-            sleep(RATE_INCREMENT_SECONDS);
+            sleep(TimeUnit.SECONDS.toMillis(RATE_INCREMENT_SECONDS));
             double increment = rounds < initialRounds ? initialRateIncrement : rateIncrement;
             rateLimiter.setRate(rateLimiter.getRate() + increment);
             ++rounds;
         }
     }
 
-    private void sleep(int millis) {
+    private void sleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (Exception ex) {
